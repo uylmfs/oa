@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Misión Código: El Portal de las Decisiones — OA (Condicionales)</title>
+  <meta name="description" content="Objeto de Aprendizaje gamificado sobre condicionales en PSeInt: narrativa, misiones, interactividad y guía docente." />
+  <style>
+    :root{
+      --bg:#0b1020;      /* fondo espacial */
+      --card:#131a34;    /* cartas */
+      --ink:#e6ecff;     /* texto principal */
+      --muted:#a9b5d6;   /* texto secundario */
+      --accent:#7c9bff;  /* acentos */
+      --accent-2:#6bffc3;/* éxito */
+      --warn:#ffd66b;    /* aviso */
+      --error:#ff7c9b;   /* error */
+      --border:#283154;  /* bordes */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    html,body{margin:0;height:100%;background:radial-gradient(1200px 600px at 80% -10%,#1a2244 0%, var(--bg) 60%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Cantarell,Noto Sans,sans-serif;}
+    a{color:var(--accent)}
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:saturate(140%) blur(8px);
+      background:linear-gradient(180deg, rgba(19,26,52,.85), rgba(19,26,52,.55));
+      border-bottom:1px solid var(--border);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,155,255,.15);border:1px solid var(--border);padding:6px 10px;border-radius:999px;color:var(--accent)}
+    .layout{display:grid;grid-template-columns:300px 1fr;gap:18px}
+    @media (max-width: 980px){.layout{grid-template-columns:1fr}}
+
+    /* Sidebar */
+    .side{position:sticky;top:64px;align-self:start;background:rgba(19,26,52,.6);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel{padding:16px 18px}
+    .panel + .panel{border-top:1px dashed var(--border)}
+    .progressbar{height:12px;background:#0f1530;border-radius:999px;border:1px solid var(--border);overflow:hidden}
+    .progressbar > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .5s ease}
+    .stat{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+
+    /* Main */
+    main{display:grid;gap:18px}
+    .card{background:rgba(19,26,52,.65);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card .head{padding:18px 20px;border-bottom:1px dashed var(--border);display:flex;gap:10px;align-items:center}
+    .card .body{padding:18px 20px}
+    .h{margin:0}
+    .muted{color:var(--muted)}
+
+    /* Mission cards */
+    .mission{display:grid;gap:14px}
+    .mission .actions{display:flex;flex-wrap:wrap;gap:10px}
+    .btn{appearance:none;border:1px solid var(--border);background:#0f1530;color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:transform .05s ease,opacity .2s}
+    .btn:hover{opacity:.95}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(180deg,#22306c,#1a254e);border-color:#2b3a78}
+    .btn.success{background:linear-gradient(180deg,#185a45,#133f31);border-color:#257a5c}
+    .btn.warn{background:linear-gradient(180deg,#5a4b18,#403613);border-color:#7a6525}
+    .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0f1530}
+    .list{display:grid;gap:8px;padding-left:18px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0f1530;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+
+    details.guide{border:1px solid var(--border);border-radius:12px;}
+    details.guide[open]{box-shadow:var(--shadow)}
+    details.guide > summary{cursor:pointer;padding:12px 14px;background:#0f1530;border-radius:12px}
+    details.guide > .guide-body{padding:14px 16px}
+
+    footer{margin:40px 0 60px;color:var(--muted)}
+    .cc{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .tag{display:inline-block;padding:3px 8px;border:1px solid var(--border);border-radius:999px;background:#0f1530;color:var(--muted)}
+
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap" role="navigation" aria-label="Barra superior">
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2l2.9 6.1L22 9.3l-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 7.1-1.2L12 2z" fill="url(#g)"/>
+          <defs><linearGradient id="g" x1="0" x2="24" y1="0" y2="24"><stop stop-color="#7c9bff"/><stop offset="1" stop-color="#6bffc3"/></linearGradient></defs>
+        </svg>
+        <div>
+          <strong>Misión Código: El Portal de las Decisiones</strong>
+          <div class="muted" style="font-size:.9rem">OA gamificado — Condicionales (PSeInt)</div>
+        </div>
+        <span class="badge" aria-live="polite" id="progress-pill">Progreso: 0%</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap layout" role="main">
+    <!-- Sidebar: progreso, XP, insignias -->
+    <aside class="side" aria-label="Panel lateral de progreso">
+      <div class="panel">
+        <h3 class="h" style="margin-bottom:6px">Progreso</h3>
+        <div class="progressbar" aria-label="Barra de progreso">
+          <span id="progress-bar" style="width:0%"></span>
+        </div>
+        <div class="stat"><span class="muted">Misiones completadas</span><strong id="completed">0/3</strong></div>
+      </div>
+      <div class="panel">
+        <h3 class="h" style="margin-bottom:6px">Puntos</h3>
+        <div class="stat"><span class="muted">XP total</span><strong id="xp">0</strong></div>
+        <div class="muted" style="font-size:.9rem">Canjea pistas con XP si lo deseas (opcional).</div>
+      </div>
+      <div class="panel" aria-live="polite">
+        <h3 class="h" style="margin-bottom:6px">Insignias</h3>
+        <div id="badges" class="list" style="list-style:none;padding:0;margin:0"></div>
+      </div>
+      <div class="panel">
+        <h3 class="h" style="margin-bottom:6px">Accesos rápidos</h3>
+        <div class="list" style="list-style:disc">
+          <a href="#intro">Introducción</a>
+          <a href="#video">Video</a>
+          <a href="#m1">Misión 1</a>
+          <a href="#m2">Misión 2</a>
+          <a href="#m3">Misión 3</a>
+          <a href="#guia">Guía de uso</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main>
+      <!-- Intro -->
+      <section id="intro" class="card" aria-labelledby="intro-title">
+        <div class="head"><h2 id="intro-title" class="h">Bienvenida</h2><span class="pill">Público objetivo: 15–17 años</span><span class="pill">Nivel: inicial</span></div>
+        <div class="body">
+          <p>
+            Año 2147. La humanidad explora más allá del sistema solar. Tu misión es atravesar <strong>3 portales interplanetarios</strong> para llevar suministros a la colonia de Orión IV.
+            Cada portal se abrirá solo si tomas <strong>la decisión correcta</strong> mediante <em>condicionales</em>.
+          </p>
+          <ul class="list">
+            <li>Objetivo 1: Identificar la estructura de un condicional simple y anidado en <span class="kbd">PSeInt</span>.</li>
+            <li>Objetivo 2: Usar operadores relacionales y lógicos para tomar decisiones.</li>
+            <li>Objetivo 3: Aplicar condicionales para resolver problemas contextualizados.</li>
+          </ul>
+          <p class="muted">Docente: guía el proceso; el OA permite avance autónomo con retroalimentación inmediata.</p>
+        </div>
+      </section>
+
+      <!-- Video placeholder -->
+      <section id="video" class="card" aria-labelledby="video-title">
+        <div class="head"><h2 id="video-title" class="h">Video explicativo (propio)</h2><span class="pill">Duración sugerida: 2–3 min</span></div>
+        <div class="body">
+          <p class="muted">Incorpora tu video (explicación de condicionales y demo de un reto). Puedes usar un iframe de YouTube, Loom, o archivo local.</p>
+          <div style="aspect-ratio:16/9;background:#0f1530;border:1px dashed var(--border);border-radius:12px;display:grid;place-items:center;">
+            <span class="muted">[ Inserta aquí el &lt;iframe&gt; del video ]</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Missions -->
+      <section id="m1" class="card mission" aria-labelledby="m1-title">
+        <div class="head"><h2 id="m1-title" class="h">Misión 1 — Portal del Combustible</h2><span class="pill">Condicional simple</span><span class="pill">+50 XP</span></div>
+        <div class="body">
+          <p><strong>Narrativa:</strong> La nave no despegará si el tanque &lt; 500 litros. Comprueba si puedes iniciar el viaje.</p>
+          <details>
+            <summary class="pill">Ver pseudocódigo sugerido</summary>
+            <pre aria-label="Código PSeInt" style="white-space:pre-wrap;background:#0f1530;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto"><code>Escribir "Ingrese litros de combustible:" 
+Leer combustible
+Si combustible &gt;= 500 Entonces
+    Escribir "¡Listo para despegar!"
+Sino
+    Escribir "No hay suficiente combustible."
+FinSi
+
+// Desafío: Permitir despegue con 450 litros (emergencia)</code></pre>
+          </details>
+          <div class="actions">
+            <a class="btn primary" href="#" aria-disabled="false" role="button" onclick="openEmbed('embed1')">Abrir actividad (Trinket)</a>
+            <button class="btn success" data-complete="m1">Marcar como completada</button>
+            <button class="btn" onclick="toggleHint('hint1')">Ver pista (coste 10 XP)</button>
+          </div>
+          <div id="embed1" style="display:none;margin-top:12px">
+            <div style="aspect-ratio:16/10;background:#0f1530;border:1px dashed var(--border);border-radius:12px;display:grid;place-items:center;">
+              <span class="muted">[ Inserta aquí el &lt;iframe src=&quot;https://trinket.io/&quot;&gt; con la actividad de Misión 1 ]</span>
+            </div>
+          </div>
+          <p id="hint1" class="muted" style="display:none">Sugerencia: Usa <span class="kbd">&gt;=</span> y contempla el caso especial con otro <span class="kbd">Si</span>.</p>
+        </div>
+      </section>
+
+      <section id="m2" class="card mission" aria-labelledby="m2-title">
+        <div class="head"><h2 id="m2-title" class="h">Misión 2 — Portal del Clima Espacial</h2><span class="pill">Condicional múltiple</span><span class="pill">+70 XP</span></div>
+        <div class="body">
+          <p><strong>Narrativa:</strong> Solo puedes pasar si el clima es <em>despejado</em> o <em>moderado</em>. Si es <em>tormenta</em>, espera.</p>
+          <details>
+            <summary class="pill">Ver pseudocódigo sugerido</summary>
+            <pre style="white-space:pre-wrap;background:#0f1530;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto"><code>Escribir "Ingrese clima: despejado, moderado o tormenta"
+Leer clima
+Si clima = "despejado" Entonces
+    Escribir "¡Portal abierto!"
+Sino Si clima = "moderado" Entonces
+    Escribir "Portal abierto con precaución."
+Sino
+    Escribir "Portal cerrado. Esperar condiciones seguras."
+FinSi
+
+// Desafío: En moderado, mostrar: "Activar escudos y pasar"</code></pre>
+          </details>
+          <div class="actions">
+            <a class="btn primary" href="#" onclick="openEmbed('embed2')">Abrir actividad (Trinket)</a>
+            <button class="btn success" data-complete="m2" disabled aria-disabled="true" title="Desbloquea completando Misión 1">Marcar como completada</button>
+            <button class="btn" onclick="toggleHint('hint2')">Ver pista (coste 10 XP)</button>
+          </div>
+          <div id="embed2" style="display:none;margin-top:12px">
+            <div style="aspect-ratio:16/10;background:#0f1530;border:1px dashed var(--border);border-radius:12px;display:grid;place-items:center;">
+              <span class="muted">[ Inserta aquí el &lt;iframe&gt; de Trinket / H5P para Misión 2 ]</span>
+            </div>
+          </div>
+          <p id="hint2" class="muted" style="display:none">Sugerencia: Usa <span class="kbd">Sino Si</span> y personaliza el mensaje para <em>moderado</em>.</p>
+        </div>
+      </section>
+
+      <section id="m3" class="card mission" aria-labelledby="m3-title">
+        <div class="head"><h2 id="m3-title" class="h">Misión 3 — Portal de los Escudos</h2><span class="pill">Operadores lógicos</span><span class="pill">+100 XP</span></div>
+        <div class="body">
+          <p><strong>Narrativa:</strong> El portal final abre si <em>escudo = "si"</em> <strong>y</strong> <em>energía &gt; 60</em>, <strong>o</strong> si la <em>clave</em> es correcta.</p>
+          <details>
+            <summary class="pill">Ver pseudocódigo sugerido</summary>
+            <pre style="white-space:pre-wrap;background:#0f1530;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto"><code>Escribir "¿Escudo activado? (si/no)"
+Leer escudo
+Escribir "Ingrese nivel de energía (0..100):"
+Leer energia
+Escribir "Ingrese clave de emergencia:"
+Leer clave
+
+Si (escudo = "si" Y energia &gt; 60) O clave = "ALFA2025" Entonces
+    Escribir "¡Portal final abierto!"
+Sino
+    Escribir "Acceso denegado."
+FinSi
+
+// Desafío: Cambia la clave y añade mensaje extra si se usa el acceso de emergencia</code></pre>
+          </details>
+          <div class="actions">
+            <a class="btn primary" href="#" onclick="openEmbed('embed3')">Abrir actividad (Trinket)</a>
+            <button class="btn success" data-complete="m3" disabled aria-disabled="true" title="Desbloquea completando Misión 2">Marcar como completada</button>
+            <button class="btn" onclick="toggleHint('hint3')">Ver pista (coste 10 XP)</button>
+          </div>
+          <div id="embed3" style="display:none;margin-top:12px">
+            <div style="aspect-ratio:16/10;background:#0f1530;border:1px dashed var(--border);border-radius:12px;display:grid;place-items:center;">
+              <span class="muted">[ Inserta aquí el &lt;iframe&gt; de Trinket / H5P para Misión 3 ]</span>
+            </div>
+          </div>
+          <p id="hint3" class="muted" style="display:none">Sugerencia: Agrupa condiciones con paréntesis y combina <span class="kbd">Y</span> / <span class="kbd">O</span>.</p>
+        </div>
+      </section>
+
+      <!-- Resultados / Final -->
+      <section class="card" aria-labelledby="final-title">
+        <div class="head"><h2 id="final-title" class="h">Final de misión</h2><span class="pill">Estadísticas</span></div>
+        <div class="body">
+          <p id="summary" class="muted">Completa las 3 misiones para ver tus estadísticas finales.</p>
+          <div class="actions">
+            <button class="btn" onclick="resetGame()">Reiniciar misión</button>
+            <button class="btn warn" onclick="share()">Compartir logros</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Guía de uso y documentación para la entrega PDF -->
+      <section id="guia" class="card" aria-labelledby="guia-title">
+        <div class="head"><h2 id="guia-title" class="h">Guía breve de uso (para docentes y estudiantes)</h2><span class="pill">Incluye ítems requeridos en la entrega</span></div>
+        <div class="body">
+          <details class="guide" open>
+            <summary><strong>1) Objetivo general del OA</strong></summary>
+            <div class="guide-body">
+              Permitir que el estudiante comprenda y aplique estructuras condicionales (simples, múltiples y con operadores lógicos) en pseudocódigo PSeInt, resolviendo misiones narrativas.
+            </div>
+          </details>
+          <details class="guide">
+            <summary><strong>2) Narrativa utilizada</strong></summary>
+            <div class="guide-body">Aventura espacial con 3 portales. Cada portal exige una decisión correcta para avanzar.</div>
+          </details>
+          <details class="guide">
+            <summary><strong>3) Mecánicas y dinámicas de gamificación</strong></summary>
+            <div class="guide-body">
+              <ul class="list">
+                <li><strong>Mecánicas:</strong> Puntos (XP), misiones, insignias, progresión visible.</li>
+                <li><strong>Dinámicas:</strong> desafío asumible, feedback inmediato, narrativa envolvente.</li>
+                <li><strong>Estética:</strong> tema ciencia ficción, interfaz accesible y responsiva.</li>
+              </ul>
+            </div>
+          </details>
+          <details class="guide">
+            <summary><strong>4) Instrucciones de uso</strong></summary>
+            <div class="guide-body">
+              1) Mira el video. 2) Abre cada actividad incrustada. 3) Marca como completada al resolver. 4) Observa tu progreso y reclama insignias. 5) Repite para mejorar.
+            </div>
+          </details>
+          <details class="guide">
+            <summary><strong>5) Recursos y tecnología</strong></summary>
+            <div class="guide-body">
+              HTML/CSS/JS con embeds de Trinket/H5P. Hospedaje sugerido: GitHub Pages / Netlify. Licencia: CC BY-SA 4.0.
+            </div>
+          </details>
+          <details class="guide">
+            <summary><strong>6) Autores</strong></summary>
+            <div class="guide-body">[Agrega aquí nombres y enlaces de contacto]</div>
+          </details>
+        </div>
+      </section>
+
+      <footer>
+        <div class="cc">Licencia: <span class="tag">CC BY-SA 4.0</span> · Puedes remezclar y reutilizar citando la fuente.
+          <span class="muted">— Este OA es una versión inicial funcional; integra tus iframes y contenidos.</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <div class="visually-hidden" aria-live="polite" id="live"></div>
+
+  <script>
+    // Estado simple del OA (sin backend). Persiste en sessionStorage.
+    const state = JSON.parse(sessionStorage.getItem('oa-state')||'{}');
+    if(!state.progress){
+      Object.assign(state, {xp:0, completed: {m1:false, m2:false, m3:false}, badges: []});
+    }
+
+    const xpEl = document.getElementById('xp');
+    const bar = document.getElementById('progress-bar');
+    const pill = document.getElementById('progress-pill');
+    const completedEl = document.getElementById('completed');
+    const badgesEl = document.getElementById('badges');
+    const live = document.getElementById('live');
+
+    function save(){ sessionStorage.setItem('oa-state', JSON.stringify(state)); }
+
+    function updateUI(){
+      const total = Object.values(state.completed).filter(Boolean).length;
+      const pct = Math.round((total/3)*100);
+      bar.style.width = pct + '%';
+      pill.textContent = `Progreso: ${pct}%`;
+      completedEl.textContent = `${total}/3`;
+      xpEl.textContent = state.xp;
+      badgesEl.innerHTML = state.badges.map(b=>`<span class="tag" title="${b}">🏅 ${b}</span>`).join(' ');
+      // Bloqueo/desbloqueo de botones de misiones
+      const m2btn = document.querySelector('[data-complete="m2"]');
+      const m3btn = document.querySelector('[data-complete="m3"]');
+      m2btn.disabled = !state.completed.m1;
+      m2btn.setAttribute('aria-disabled', String(!state.completed.m1));
+      m3btn.disabled = !state.completed.m2;
+      m3btn.setAttribute('aria-disabled', String(!state.completed.m2));
+      // Resumen final
+      const s = document.getElementById('summary');
+      if(total===3){ s.innerHTML = `¡Misión cumplida! XP total: <strong>${state.xp}</strong>. Insignias: ${state.badges.join(', ')||'—'} `; }
+      save();
+    }
+
+    // Manejo de completar misiones
+    document.querySelectorAll('button[data-complete]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const key = btn.getAttribute('data-complete');
+        if(state.completed[key]) return;
+        // Asigna XP según misión
+        const xpMap = {m1:50, m2:70, m3:100};
+        state.xp += xpMap[key]||0;
+        state.completed[key] = true;
+        // Insignias
+        const badgeMap = {m1:'Guardia del Portal', m2:'Explorador del Clima', m3:'Maestro de Condicionales'};
+        const badge = badgeMap[key];
+        if(badge && !state.badges.includes(badge)) state.badges.push(badge);
+        live.textContent = `Has completado ${key}. +${xpMap[key]} XP. Obtienes la insignia ${badge}.`;
+        updateUI();
+      });
+    });
+
+    function resetGame(){
+      Object.assign(state, {xp:0, completed:{m1:false,m2:false,m3:false}, badges:[]});
+      updateUI();
+    }
+
+    function toggleHint(id){
+      const cost = 10; // XP por pista
+      if(state.xp < cost){ alert('Necesitas 10 XP para ver una pista.'); return; }
+      const el = document.getElementById(id);
+      const visible = el.style.display !== 'none';
+      if(!visible){ state.xp -= cost; el.style.display = 'block'; }
+      else{ el.style.display = 'none'; }
+      updateUI();
+    }
+
+    function openEmbed(id){
+      const el = document.getElementById(id);
+      el.style.display = (el.style.display==='none')? 'block':'none';
+    }
+
+    async function share(){
+      const text = `Completé el OA "Misión Código: Condicionales" con ${state.xp} XP y ${Object.values(state.completed).filter(Boolean).length}/3 misiones. #Programación #PSeInt`;
+      if(navigator.share){ try{ await navigator.share({title:'Misión Código — OA', text, url: location.href}); }catch(e){} }
+      else{ navigator.clipboard?.writeText(text); alert('Logros copiados al portapapeles.'); }
+    }
+
+    updateUI();
+  </script>
+
+  <!-- 
+  =============================
+  ✅ ADAPTACIÓN RÁPIDA A VARIABLES (opcional)
+  - Reemplazar textos de misiones por:
+    M1: Declarar y asignar variables (tipos y operadores aritméticos simples).
+    M2: Conversión de tipos / validación de entrada.
+    M3: Expresiones con operadores y precedencia.
+  - Mantener la misma estructura de XP/insignias.
+  =============================
+  -->
+</body>
+</html>
