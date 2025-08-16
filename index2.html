@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Objeto de Aprendizaje – Condicionales | JS · Python · Pseudocódigo</title>
+  <meta name="description" content="OA interactivo: condicionales (simple, múltiple, lógicos) con editor integrado para pseudocódigo, JavaScript y Python (Pyodide)." />
+  <style>
+    :root{
+      --ink:#e8eeff; --muted:#9fb0ff; --accent:#5dd1ff; --good:#42d392; --warn:#ffd166; --bad:#ff6b6b;
+      --bg:#0a0f24; --panel:#0f1530; --border:#1e2a55; --brand:#6b8cff;
+    }
+    html,body{background:var(--bg);color:var(--ink);font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";line-height:1.55}
+    .wrap{max-width:980px;margin-inline:auto;padding:24px}
+    h1{font-size:clamp(1.6rem,2.4vw,2.1rem);margin:0 0 8px}
+    h2{font-size:1.25rem;margin:20px 0 6px}
+    p{color:var(--ink)}
+    .hero{background:linear-gradient(180deg,#11193a,#0f1530);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+    .grid{display:grid;gap:14px}
+    @media(min-width:880px){.grid{grid-template-columns:1.1fr .9fr;align-items:start}}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:4px 10px;color:var(--accent)}
+    .btn{appearance:none;border:1px solid var(--border);background:#10173a;color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(180deg,#2a3c86,#1a2760)}
+    .btn.ghost{background:transparent}
+    .muted{color:var(--muted)}
+    .muted-small{font-size:.92rem;color:var(--muted)}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    /* Editor & Tabs */
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .tab-btn{appearance:none;border:1px solid var(--border);background:#0f1530;color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .tab-btn[aria-selected="true"]{background:linear-gradient(180deg,#22306c,#1a254e);border-color:#2b3a78}
+    .tab-panel{display:none;margin-top:10px}
+    .tab-panel[aria-hidden="false"]{display:block}
+    .editor{display:grid;gap:8px}
+    .editor textarea{width:100%;min-height:180px;background:#0f1530;color:var(--ink);border:1px solid var(--border);border-radius:12px;padding:10px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .output{background:#0f1530;border:1px solid var(--border);border-radius:12px;padding:10px;min-height:64px;white-space:pre-wrap}
+
+    /* Progress */
+    .progress{height:10px;border-radius:999px;background:#0b1030;border:1px solid var(--border);overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#42d392,#5dd1ff)}
+    .pill{display:inline-block;background:#0f1530;border:1px solid var(--border);border-radius:10px;padding:3px 8px}
+    footer{margin-top:30px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="row" style="justify-content:space-between">
+        <h1>OA · Condicionales (simple · múltiple · lógicos)</h1>
+        <span class="badge">CC BY-SA 4.0</span>
+      </div>
+      <p class="muted">Objetivo: que puedas usar condicionales para tomar decisiones en programas y pseudocódigo. Practica en <strong>tres modos</strong>: Pseudocódigo (estilo PSeInt), JavaScript y Python (en navegador con Pyodide).</p>
+      <div class="row" role="status" aria-live="polite">
+        <span class="pill" id="xp">XP: <strong>0</strong></span>
+        <span class="pill">Misiones completadas: <strong id="done">0</strong>/3</span>
+        <div class="progress" style="flex:1;min-width:220px"><div class="bar" id="bar"></div></div>
+      </div>
+    </header>
+
+    <main class="grid" style="margin-top:14px">
+      <section class="card">
+        <h2>Cómo usar este OA</h2>
+        <ol class="muted">
+          <li>Elige una misión, lee el reto y abre la pestaña de <em>Pseudocódigo</em>, <em>JavaScript</em> o <em>Python</em>.</li>
+          <li>Escribe o edita el código en el editor y presiona <strong>Validar/Ejecutar</strong>.</li>
+          <li>Si superas las pruebas, marca la misión como <strong>Completada</strong>.</li>
+        </ol>
+      </section>
+
+      <aside class="card">
+        <h2>Competencias y criterios</h2>
+        <ul class="muted">
+          <li>Comprende y aplica condicionales simples, múltiples y con operadores lógicos.</li>
+          <li>Traduce entre pseudocódigo y un lenguaje real (JS o Python).</li>
+          <li>Valida soluciones con <em>casos de prueba</em> y mensajes claros.</li>
+        </ul>
+      </aside>
+    </main>
+
+    <!-- ===== MISIÓN 1 ===== -->
+    <section class="card mission" id="m1">
+      <h2>🔹 Misión 1: Condicional simple</h2>
+      <p>Reto: si hay <strong>500</strong> o más litros de combustible, mostrar <em>“¡Listo para despegar!”</em>; en caso contrario, <em>“No hay suficiente combustible.”</em>. <br>Extra: permitir despegue con <strong>450</strong> litros (emergencia).</p>
+
+      <div class="muted-small">Elige un modo y ejecuta tu solución. El validador de Pseudocódigo verifica la lógica para esta misión.</div>
+      <div class="tabs" role="tablist" aria-label="Modos de práctica M1">
+        <button class="tab-btn" role="tab" aria-selected="true" aria-controls="m1-tab-pseudo" id="m1-tabbtn-pseudo">Pseudocódigo</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m1-tab-js" id="m1-tabbtn-js">JavaScript</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m1-tab-py" id="m1-tabbtn-py">Python</button>
+      </div>
+      <div id="m1-tab-pseudo" class="tab-panel" role="tabpanel" aria-hidden="false">
+        <div class="editor">
+<textarea id="m1-code-pseudo">Escribir "Ingrese litros de combustible:"
+Leer combustible
+Si combustible >= 500 Entonces
+    Escribir "¡Listo para despegar!"
+Sino
+    Escribir "No hay suficiente combustible."
+FinSi
+// Desafío: permitir despegue con 450 litros (emergencia)</textarea>
+          <div class="row">
+            <button class="btn primary" onclick="runPseudocode('m1')">Validar pseudocódigo</button>
+            <span class="muted">Casos: 400, 450, 500, 600.</span>
+          </div>
+          <div id="m1-out-pseudo" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m1-tab-js" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m1-code-js">function decide(combustible){
+  if (combustible >= 500 || combustible === 450){
+    return "¡Listo para despegar!";
+  } else {
+    return "No hay suficiente combustible.";
+  }
+}
+
+let resultados = [400,450,500,600].map(v=>`${v} → ${decide(v)}`).join('\n');
+console.log(resultados);</textarea>
+          <div class="row">
+            <button class="btn primary" onclick="runJS('m1')">Ejecutar JS</button>
+          </div>
+          <div id="m1-out-js" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m1-tab-py" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m1-code-py">def decide(combustible: int) -> str:
+    if combustible >= 500 or combustible == 450:
+        return "¡Listo para despegar!"
+    else:
+        return "No hay suficiente combustible."
+
+resultados = "\n".join([f"{v} → {decide(v)}" for v in [400,450,500,600]])
+print(resultados)</textarea>
+          <div class="row">
+            <button class="btn primary" onclick="runPy('m1')">Ejecutar Python</button>
+            <span class="muted-small">La primera ejecución carga Pyodide.</span>
+          </div>
+          <div id="m1-out-py" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="markDone('m1')">Marcar como completada</button>
+      </div>
+    </section>
+
+    <!-- ===== MISIÓN 2 ===== -->
+    <section class="card mission" id="m2">
+      <h2>🔹 Misión 2: Condicional múltiple</h2>
+      <p>Reto: según el <em>clima</em>: <strong>despejado</strong> → “¡Portal abierto!”; <strong>moderado</strong> → “Activar escudos y pasar”; otro → “Portal cerrado. Esperar condiciones seguras.”</p>
+
+      <div class="tabs" role="tablist" aria-label="Modos de práctica M2">
+        <button class="tab-btn" role="tab" aria-selected="true" aria-controls="m2-tab-pseudo" id="m2-tabbtn-pseudo">Pseudocódigo</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m2-tab-js" id="m2-tabbtn-js">JavaScript</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m2-tab-py" id="m2-tabbtn-py">Python</button>
+      </div>
+      <div id="m2-tab-pseudo" class="tab-panel" role="tabpanel" aria-hidden="false">
+        <div class="editor">
+<textarea id="m2-code-pseudo">Escribir "Ingrese clima: despejado, moderado o tormenta"
+Leer clima
+Si clima = "despejado" Entonces
+    Escribir "¡Portal abierto!"
+Sino Si clima = "moderado" Entonces
+    Escribir "Activar escudos y pasar"
+Sino
+    Escribir "Portal cerrado. Esperar condiciones seguras."
+FinSi</textarea>
+          <div class="row">
+            <button class="btn primary" onclick="runPseudocode('m2')">(Demo) Validar pseudocódigo</button>
+          </div>
+          <div id="m2-out-pseudo" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m2-tab-js" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m2-code-js">function decide(clima){
+  if (clima === 'despejado') return '¡Portal abierto!';
+  else if (clima === 'moderado') return 'Activar escudos y pasar';
+  else return 'Portal cerrado. Esperar condiciones seguras.';
+}
+console.log(['despejado','moderado','tormenta'].map(c=>`${c} → ${decide(c)}`).join('\n'));</textarea>
+          <div class="row"><button class="btn primary" onclick="runJS('m2')">Ejecutar JS</button></div>
+          <div id="m2-out-js" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m2-tab-py" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m2-code-py">def decide(clima: str) -> str:
+    if clima == 'despejado':
+        return '¡Portal abierto!'
+    elif clima == 'moderado':
+        return 'Activar escudos y pasar'
+    else:
+        return 'Portal cerrado. Esperar condiciones seguras.'
+
+print("\n".join([f"{c} → {decide(c)}" for c in ['despejado','moderado','tormenta']]))</textarea>
+          <div class="row"><button class="btn primary" onclick="runPy('m2')">Ejecutar Python</button></div>
+          <div id="m2-out-py" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="markDone('m2')">Marcar como completada</button>
+      </div>
+    </section>
+
+    <!-- ===== MISIÓN 3 ===== -->
+    <section class="card mission" id="m3">
+      <h2>🔹 Misión 3: Operadores lógicos</h2>
+      <p>Reto: abrir el portal si (<em>escudo</em> = "si" <strong>y</strong> <em>energía</em> &gt; 60) <strong>o</strong> si la clave es <strong>ALFA2025</strong>.</p>
+
+      <div class="tabs" role="tablist" aria-label="Modos de práctica M3">
+        <button class="tab-btn" role="tab" aria-selected="true" aria-controls="m3-tab-pseudo" id="m3-tabbtn-pseudo">Pseudocódigo</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m3-tab-js" id="m3-tabbtn-js">JavaScript</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="m3-tab-py" id="m3-tabbtn-py">Python</button>
+      </div>
+      <div id="m3-tab-pseudo" class="tab-panel" role="tabpanel" aria-hidden="false">
+        <div class="editor">
+<textarea id="m3-code-pseudo">Escribir "¿Escudo activado? (si/no)"
+Leer escudo
+Escribir "Ingrese nivel de energía (0..100):"
+Leer energia
+Escribir "Ingrese clave de emergencia:"
+Leer clave
+Si (escudo = "si" Y energia > 60) O clave = "ALFA2025" Entonces
+    Escribir "¡Portal final abierto!"
+Sino
+    Escribir "Acceso denegado."
+FinSi</textarea>
+          <div class="row"><button class="btn primary" onclick="runPseudocode('m3')">(Demo) Validar pseudocódigo</button></div>
+          <div id="m3-out-pseudo" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m3-tab-js" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m3-code-js">function decide(escudo, energia, clave){
+  if ((escudo === 'si' && energia > 60) || clave === 'ALFA2025'){
+    return '¡Portal final abierto!';
+  }
+  return 'Acceso denegado.';
+}
+console.log([
+  ['si',70,'X'],
+  ['no',50,'ALFA2025'],
+  ['no',50,'Z']
+].map(p=>`${JSON.stringify(p)} → ${decide(...p)}`).join('\n'));</textarea>
+          <div class="row"><button class="btn primary" onclick="runJS('m3')">Ejecutar JS</button></div>
+          <div id="m3-out-js" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+      <div id="m3-tab-py" class="tab-panel" role="tabpanel" aria-hidden="true">
+        <div class="editor">
+<textarea id="m3-code-py">def decide(escudo: str, energia: int, clave: str) -> str:
+    if (escudo == 'si' and energia > 60) or clave == 'ALFA2025':
+        return '¡Portal final abierto!'
+    return 'Acceso denegado.'
+
+casos = [('si',70,'X'), ('no',50,'ALFA2025'), ('no',50,'Z')]
+print("\n".join([f"{c} → {decide(*c)}" for c in casos]))</textarea>
+          <div class="row"><button class="btn primary" onclick="runPy('m3')">Ejecutar Python</button></div>
+          <div id="m3-out-py" class="output" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <button class="btn" onclick="markDone('m3')">Marcar como completada</button>
+      </div>
+    </section>
+
+    <footer class="wrap" style="padding-inline:0">
+      <p class="muted">Sugerencia: para <strong>Variables y tipos de datos</strong>, duplica este archivo y ajusta los retos. Puedes añadir pruebas automatizadas en <em>runPseudocode</em> para cada misión.</p>
+    </footer>
+  </div>
+
+  <!-- Pyodide para Python en el navegador -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js" defer></script>
+  <script>
+    // ====== Estado simple de progreso ======
+    const xpEl = document.getElementById('xp');
+    const doneEl = document.getElementById('done');
+    const barEl = document.getElementById('bar');
+    function markDone(id){
+      const key = 'oa_done_'+id; if(localStorage.getItem(key)) return;
+      localStorage.setItem(key,'1');
+      const done = ['m1','m2','m3'].filter(k=>localStorage.getItem('oa_done_'+k)).length;
+      doneEl.textContent = done;
+      const xp = done*50; xpEl.innerHTML = 'XP: <strong>'+xp+'</strong>';
+      barEl.style.width = (done/3*100)+'%';
+    }
+    (function init(){
+      const done = ['m1','m2','m3'].filter(k=>localStorage.getItem('oa_done_'+k)).length;
+      doneEl.textContent = done; barEl.style.width = (done/3*100)+'%'; xpEl.innerHTML = 'XP: <strong>'+(done*50)+'</strong>';
+    })();
+
+    // ====== Tabs ======
+    function setupTabs(){
+      document.querySelectorAll('[role="tab"]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const root = btn.closest('.mission');
+          root.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected','false'));
+          root.querySelectorAll('.tab-panel').forEach(p=>p.setAttribute('aria-hidden','true'));
+          btn.setAttribute('aria-selected','true');
+          const panel = root.querySelector('#'+btn.getAttribute('aria-controls'));
+          if(panel) panel.setAttribute('aria-hidden','false');
+        });
+      });
+    }
+    document.addEventListener('DOMContentLoaded', setupTabs);
+
+    // ====== Pseudocódigo – Validador básico (M1 sólido; M2/M3 demo) ======
+    function normalize(s){return s.replace(/\r/g,'').replace(/\t/g,' ').split('\n').map(l=>l.trim()).join('\n');}
+    function runPseudocode(mission){
+      const codeEl = document.getElementById(`${mission}-code-pseudo`);
+      const outEl = document.getElementById(`${mission}-out-pseudo`);
+      const code = normalize(codeEl.value.toLowerCase());
+      if(mission==='m1'){
+        const hasSi = /\bsi\b/.test(code) && /(finsi|fin\s*si)/.test(code);
+        const mentionsComb = /combustible/.test(code);
+        const condGE500 = /(combustible\s*>?=\s*500|500\s*<=\s*combustible)/.test(code);
+        const emergency450 = /(combustible\s*=+\s*450|450\s*=+\s*combustible|combustible\s*>=\s*450\b)/.test(code);
+        const ok500 = /listo\s*para\s*despegar/.test(code);
+        const notEnough = /no\s*hay\s*suficiente\s*combustible/.test(code);
+        let score = 0, msgs=[];
+        if(hasSi){ score+=1; } else { msgs.push('Falta estructura Si ... FinSi'); }
+        if(mentionsComb){ score+=1; } else { msgs.push('No se hace referencia a la variable combustible'); }
+        if(condGE500){ score+=2; } else { msgs.push('Falta condición para combustible >= 500'); }
+        if(ok500 && notEnough){ score+=2; } else { msgs.push('Asegura mensajes distintos para verdadero y falso'); }
+        if(emergency450){ score+=2; } else { msgs.push('Agrega el caso de emergencia con 450 litros (>= 450 o == 450)'); }
+        function decide(v){ const can = (v>=500) || (emergency450 && v===450); return `${v} → ${can? '¡Listo para despegar!':'No hay suficiente combustible.'}`; }
+        const table = [400,450,500,600].map(decide).join('\n');
+        const passed = score>=6 && condGE500 && ok500 && notEnough;
+        outEl.textContent = `Pruebas (simuladas):\n${table}\n\nPuntaje: ${score}/8\n${passed? '✅ Aprobado':'❌ Aún no cumple todos los criterios'}\n${msgs.length? ('\nSugerencias:\n- '+msgs.join('\n- ')):''}`;
+      } else {
+        outEl.textContent = 'Validador demo: por ahora verifica estructura básica \u2013 puedes adaptar criterios en runPseudocode().';
+      }
+    }
+
+    // ====== JavaScript Runner (aislado) ======
+    function runJS(mission){
+      const codeEl = document.getElementById(`${mission}-code-js`);
+      const outEl = document.getElementById(`${mission}-out-js`);
+      outEl.textContent = '';
+      try{
+        const log=[]; const originalLog = console.log; console.log = (...args)=>{ log.push(args.join(' ')); };
+        new Function(codeEl.value)();
+        console.log = originalLog;
+        outEl.textContent = log.join('\n') || '⟂ (sin salida)';
+      }catch(e){ outEl.textContent = 'Error: '+e.message; }
+    }
+
+    // ====== Python Runner (Pyodide) ======
+    let pyodideReady = null;
+    async function ensurePyodide(){
+      if(!pyodideReady){
+        pyodideReady = (async()=>{ if(typeof loadPyodide !== 'function') throw new Error('Pyodide no cargó todavía.'); return await loadPyodide(); })();
+      }
+      return pyodideReady;
+    }
+    async function runPy(mission){
+      const codeEl = document.getElementById(`${mission}-code-py`);
+      const outEl = document.getElementById(`${mission}-out-py`);
+      outEl.textContent = 'Cargando/ejecutando Python…';
+      try{
+        const py = await ensurePyodide();
+        const result = await py.runPythonAsync(codeEl.value);
+        outEl.textContent = String(result||'⟂ (sin salida)');
+      }catch(e){ outEl.textContent = 'Error: '+e.message; }
+    }
+  </script>
+</body>
+</html>
